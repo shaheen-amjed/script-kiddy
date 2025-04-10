@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scary Tracker</title>
+    <title>HI WE ARE...</title>
     <style>
         html, body {
             overflow: hidden;
@@ -111,17 +111,17 @@
     <!-- Troll Face -->
     <img src="https://i.pinimg.com/736x/23/c8/70/23c870bf96c2a15cd26cf558de5d3cdf.jpg" alt="Troll Face" id="trollFace">
 
-    <h1>WE KNOW WHO YOU ARE!</h1>
+    <h1>شفع مسوين فيها هكرات بتعرفو تسوو شغل زي دا؟؟</h1>
 
     <div class="content">
         <p id="ipData">Loading your info...</p>
         <p id="deviceData"></p>
         <iframe id="map"></iframe>
-        <button class="button" onclick="sendData()">You Have Been Watched</button>
+        <button class="button" onclick="sendData()">You Have Been Hacked</button>
     </div>
 
     <div class="final-message">
-        <p>We have reported your identity. Don’t mess with real hackers.</p>
+        <p>دا اقل شي ممكن نسوي، فبطلو تهديد في الناس عشان ما نسوي ليكم حاجة ما تعجبكم.</p>
     </div>
 
     <script>
@@ -137,7 +137,7 @@
             const deviceInfo = getDeviceInfo();
 
             // Display IP and Location Info
-            document.getElementById('ipData').innerHTML = `Your IP: ${ipData.ip}<br>Location: ${ipData.city}, ${ipData.country_name}<br>Region: ${ipData.region}<br>ISP: ${ipData.org}<br>Timezone: ${ipData.timezone}<br>Latitude: ${ipData.latitude}<br>Longitude: ${ipData.longitude}`;
+            document.getElementById('ipData').innerHTML = `Your IP: ${ipData.ip}<br>Your Network Ip: ${ipData.network}<br> Location: ${ipData.city}, ${ipData.country_name}<br>Region: ${ipData.region}<br>ISP: ${ipData.org}<br>Timezone: ${ipData.timezone}<br>Latitude: ${ipData.latitude}<br>Longitude: ${ipData.longitude}`;
             document.getElementById('deviceData').innerHTML = `Device: ${deviceType}<br>Manufacturer: ${deviceInfo}<br>Browser: ${navigator.appName} ${navigator.appVersion}<br>Screen Size: ${window.innerWidth}x${window.innerHeight}<br>Operating System: ${navigator.platform}`;
 
             // Display Google Map with Location
